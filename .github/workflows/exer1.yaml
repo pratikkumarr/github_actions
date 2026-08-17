@@ -1,0 +1,44 @@
+name: System Report
+
+on: push
+
+jobs:
+    system-info:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Print OS and kernel
+              run: |
+                echo "OS name: $(uname -o)"
+                echo "Kernel Version: $(uname -r)"
+            - name: Print free disk space
+              run: df -h
+            - name: Print date and time
+              run: date
+            - name: install tree
+              run: sudo apt-get install tree
+            - name : display folder structure of runner's home directory
+              run: tree -L 2 $HOME
+
+    tool-check:
+        runs-on: ubuntu-latest
+        steps:
+            - name: install jq
+              run: sudo apt-get install jq
+
+            - name: create report.json
+              run: |
+                cat > report.json <<EOF
+                {
+                    "project": "System Report",
+                    "status": "success",
+                    "environment": "Github Actions"
+                }
+                EOF
+
+            - name: Read value using jq
+              run: |
+                python3 --version
+                git --version
+                jq --version
+            - name: Report Complete
+              run: echo "Report Complete"
