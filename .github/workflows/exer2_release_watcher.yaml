@@ -1,0 +1,30 @@
+# Scenario: The release watcher
+
+# Your team only wants heavy release-related jobs to run when code lands on main, either through a direct push or on a fixed weekly cadence to catch anything missed, while still keeping a manual override for emergencies. Write a new workflow called Release Watcher that:
+
+# Triggers on push to the main branch only
+# Also triggers on a schedule that runs every Monday at 9 AM UTC
+# Also allows manual triggering
+# Has one job called watch that runs on the latest Ubuntu runner
+# Prints the event name that triggered the run
+# Prints the current date and time
+# Finishes by printing "Release watch complete"
+
+name: The release watcher
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+    echo:
+        runs-on: ubuntu-latest
+        steps:
+            - name: watch
+              run: |
+                echo "This workflow was triggered by a(n) ${{ github.event_name }} event."
+                date
+                echo "Release watch complete"
