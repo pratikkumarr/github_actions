@@ -11,36 +11,54 @@
 # Then make the setup job fail deliberately and push again. Record what status the other two jobs are given, and write one line on why that status is not the same as failed.
 
 name: Ordered Pipeline
+
 on:
   push:
   workflow_dispatch:
 
 jobs:
-    setup:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                node-version: latest
-            - run: |
-                echo "Setup done"
-                exit 1
+  setup:
+    runs-on: ubuntu-latest
 
-    verify:
-        needs: setup
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
-              with:
-                node-version: latest
-            - run: |
-                node --version
-                echo "Verify done"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    finish:
-        needs: verify
-        runs-on: ubuntu-latest
-        steps:
-            - run: echo "Pipeline finished"
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup done
+        run: echo "Setup done"
+
+      # Deliberately fail the setup job
+      - name: Deliberate failure
+        run: exit 1
+
+  verify:
+    needs: setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Print runtime version
+        run: node --version
+
+      - name: Verify done
+        run: echo "Verify done"
+
+  finish:
+    needs: verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pipeline finished
+        run: echo "Pipeline finished"

@@ -13,23 +13,29 @@
 # Write one line explaining what the two listings show.
 
 name: Checkout Proof
+
 on:
   push:
   workflow_dispatch:
 
 jobs:
-    echo:
-        runs-on: ubuntu-latest
-        steps:
-            - name: prove
-              run: |
-                echo "Before checkout:"
-                pwd
-                ls -la
-                echo "Checking out the repository..."
-                git clone ${{ github.repository_url }} .
-                echo "After checkout:"
-                ls -la
-                count=$(ls -1 | wc -l)
-                echo "Number of files after checkout: $count"
-                echo "Proof captured"
+  prove:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Before checkout
+        run: |
+          pwd
+          ls -la
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: After checkout
+        run: ls -la
+
+      - name: Count files
+        run: find . -type f | wc -l
+
+      - name: Proof captured
+        run: echo "Proof captured"
