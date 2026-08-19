@@ -1,0 +1,35 @@
+# Scenario: The checkout proof
+
+# Your team keeps forgetting that a runner starts empty. Write a new workflow called Checkout Proof that:
+
+# Triggers on push and manual dispatch
+# Has one job called prove that runs on the latest Ubuntu runner
+# Before checking out anything, prints the current folder path and lists its contents
+# Then checks out the repository
+# Lists the contents of the folder again
+# Counts how many files are now present
+# Finishes by printing "Proof captured"
+
+# Write one line explaining what the two listings show.
+
+name: Checkout Proof
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+    echo:
+        runs-on: ubuntu-latest
+        steps:
+            - name: prove
+              run: |
+                echo "Before checkout:"
+                pwd
+                ls -la
+                echo "Checking out the repository..."
+                git clone ${{ github.repository_url }} .
+                echo "After checkout:"
+                ls -la
+                count=$(ls -1 | wc -l)
+                echo "Number of files after checkout: $count"
+                echo "Proof captured"

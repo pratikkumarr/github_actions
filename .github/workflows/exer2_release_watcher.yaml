@@ -12,12 +12,12 @@
 
 name: The release watcher
 on:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 9 * * 1'
-  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  # schedule:
+  #   - cron: '0 9 * * 1'
+  workflow_dispatch
 
 jobs:
     echo:
